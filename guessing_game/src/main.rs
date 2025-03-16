@@ -1,51 +1,22 @@
-use rand::Rng;
-use std::cmp::Ordering;
-use std::io;
+// fn main() {
+//     let string1 = String::from("abcd");
+//     let string2 = "xyz";
 
-pub struct Guess {
-    value: i32,
-}
-
-impl Guess {
-    pub fn new(value: i32) -> Guess {
-        if value < 1 || value > 100 {
-            panic!("Guess value must be between 1 and 100, got {value}.");
-        }
-
-        Guess { value }
-    }
-
-    pub fn value(&self) -> i32 {
-        self.value
-    }
-}
+//     let result = longest(string1.as_str(), string2);
+//     println!("The longest string is {result}");
+// }
 
 fn main() {
-    println!("Guess the number!");
+    let string1 = String::from("long string is long");
 
-    let secret_number = rand::thread_rng().gen_range(1..=100);
-
-    // println!("The secret number is: {secret_number}");
-    loop {
-        println!("Please input your guess.");
-
-        let mut guess = String::new();
-
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed to read line");
-
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-        println!("You guessed: {guess}");
-
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => println!("You win!"),
-        }
-        break;
+    {
+        let result;
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str());
+        println!("The longest string is {result}");
     }
+}
+
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
 }
