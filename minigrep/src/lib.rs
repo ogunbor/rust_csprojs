@@ -7,13 +7,13 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn build(args1: &[String]) -> Result<Config, &'static str> {
-        if args1.len() < 3 {
+    pub fn build(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
             return Err("not enough arguments");
         }
 
-        let query = args1[1].clone();
-        let file_path = args1[2].clone();
+        let query = args[1].clone();
+        let file_path = args[2].clone();
 
         Ok(Config { query, file_path })
     }
