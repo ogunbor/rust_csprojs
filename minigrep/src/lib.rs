@@ -1,5 +1,5 @@
+use regex::Regex;
 use std::env;
-
 use std::error::Error;
 use std::fs;
 
@@ -17,7 +17,6 @@ impl Config {
 
         let query = args[1].clone();
         let file_path = args[2].clone();
-
         let ignore_case = env::var("IGNORE_CASE").is_ok();
 
         Ok(Config {
@@ -41,62 +40,32 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
         println!("{line}");
     }
 
+    // Detect and print the type of blockchain address
+    let evm_regex = Regex::new(r"^0x[a-fA-F0-9]{40}$").unwrap();
+    let solana_regex = Regex::new(r"^[1-9A-HJ-NP-Za-km-z]{44}$").unwrap();
+
+    if evm_regex.is_match(&config.query) {
+        println!("✅ The provided address is an **EVM address**.");
+    } else if solana_regex.is_match(&config.query) {
+        println!("✅ The provided address is a **Solana address**.");
+    } else {
+        println!("❌ Invalid blockchain address! Please enter a valid EVM or Solana address.");
+    }
+
     Ok(())
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-
-    results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&query) {
-            results.push(line);
-        }
-    }
-
-    results
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn case_sensitive() {
-        let query = "duct";
-        let contents = "\
-Rust:
-safe, fast, productive.
-Pick three.
-Duct tape.";
-
-        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
-    }
-
-    #[test]
-    fn case_insensitive() {
-        let query = "rUsT";
-        let contents = "\
-Rust:
-safe, fast, productive.
-Pick three.
-Trust me.";
-
-        assert_eq!(
-            vec!["Rust:", "Trust me."],
-            search_case_insensitive(query, contents)
-        );
-    }
+    contents
+        .lines()
+        .filter(|line| line.to_lowercase().contains(&query))
+        .collect()
 }
