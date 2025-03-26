@@ -1,0 +1,1 @@
+Smart pointers in Rust, like Box<T>, Rc<T>, and Arc<T>, manage memory safely and efficiently. They enable automatic deallocation and reference counting, preventing memory leaks while ensuring safe ownership and borrowing in Rust programs.
