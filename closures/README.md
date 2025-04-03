@@ -1,0 +1,1 @@
+In Rust, closures are anonymous functions that can capture and manipulate variables from their environment. They are flexible, allowing variables to be captured by reference, value, or mutable reference. Closures are often used for short-lived tasks, enabling concise and efficient code. Rust's ownership system ensures memory safety with closures.
